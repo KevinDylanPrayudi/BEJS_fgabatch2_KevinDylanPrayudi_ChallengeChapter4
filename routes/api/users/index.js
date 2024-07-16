@@ -4,9 +4,12 @@ const validator = require('../../../validator');
 
 function main(db) {
     async function get(req, res) {
-        const result = await db.identity_Types.findMany();
-        result.forEach(element => {
-            element.id = Number(element.id)
+        const result = await db.users.findMany({
+            select: {
+                id: true,
+                name: true,
+                email: true
+            }
         });
         await db.$disconnect();
         res.send(result);
@@ -14,14 +17,10 @@ function main(db) {
     
     async function post(req, res) {
         try {
-            await validator.identityTypes.post().validateAsync(req.body)
-            const { identity_type_name } = req.body;
-            const result = await db.identity_Types.create({
-                select: {
-                    identity_type_name: true
-                },
+            await validator.users.post().validateAsync(req.body)
+            const result = await db.users.create({
                 data: {
-                    identity_type_name
+                    ...req.body
                 }
             });
             await db.$disconnect();
@@ -36,16 +35,12 @@ function main(db) {
     
     async function put(req, res) {
         try {
-            await validator.identityTypes.put().validateAsync(req.body)
-            const { identity_type_name } = req.body;
-            const id = Number(req.params.id);
-            const result = await db.identity_Types.update({
-                select: {
-                    identity_type_name: true
-                },
+            const id = req.params.id;
+            await validator.users.put().validateAsync(req.body)
+            const result = await db.users.update({
                 where: { id : id },
                 data: {
-                    identity_type_name
+                    ...req.body
                 }
             });
             await db.$disconnect();
@@ -60,8 +55,9 @@ function main(db) {
     
     async function remove(req, res) {
         try {
-            const id = Number(req.params.id);
-            result = await db.identity_Types.delete({
+            const id = req.params.id;
+            console.log(id)
+            result = await db.users.delete({
                 where: { id : id }
             });
             res.sendStatus(204);
@@ -71,7 +67,25 @@ function main(db) {
         }
     }
 
-    return { get, post, put, remove };
+    async function getOne(req, res) {
+        try {
+            const id = req.params.id;
+            result = await db.users.findUnique({
+                select: {
+                    id: true,
+                    name: true,
+                    email: true
+                },
+                where: { id : id }
+            });
+            res.json(result);
+        } catch (err) {
+            if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).send(err.meta.cause);
+            res.status(500).json(err.message)
+        }
+    }
+
+    return { get, post, put, remove, getOne };
 }
 
 module.exports = main
