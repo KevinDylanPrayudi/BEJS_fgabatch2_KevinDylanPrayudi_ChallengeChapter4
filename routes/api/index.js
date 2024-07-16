@@ -11,6 +11,7 @@ function main(router, db) {
     router.post('/users', users(db).post);
     router.put('/users/:id', users(db).put);
     router.delete('/users/:id', users(db).remove);
+  
     return router;
 }
 
