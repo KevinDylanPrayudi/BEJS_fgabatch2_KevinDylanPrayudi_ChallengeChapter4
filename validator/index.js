@@ -36,7 +36,30 @@ function users() {
     return { post, put };
 }
 
+function profiles() {
+    function post() {
+        return Joi.object({
+            user_id: Joi.string().required(),
+            identity_type_id: Joi.number().required(),
+            identity_number: Joi.string().required(),
+            address: Joi.string().required()
+        })
+    }
+
+    function put() {
+        return Joi.object({
+            user_id: Joi.string(),
+            identity_type_id: Joi.number(),
+            identity_number: Joi.string(),
+            address: Joi.string()
+        })
+    }
+
+    return { post, put };
+}
+
 module.exports = {
     identityTypes: identityTypes(),
-    users: users()
+    users: users(),
+    profiles: profiles()
 }

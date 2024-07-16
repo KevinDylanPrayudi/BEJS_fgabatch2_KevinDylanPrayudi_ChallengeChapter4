@@ -4,11 +4,10 @@ const validator = require('../../../validator');
 
 function main(db) {
     async function get(req, res) {
-        const result = await db.users.findMany({
+        const result = await db.profiles.findMany({
             select: {
-                id: true,
-                name: true,
-                email: true
+                identity_number: true,
+                address: true
             }
         });
         await db.$disconnect();
@@ -17,12 +16,11 @@ function main(db) {
     
     async function post(req, res) {
         try {
-            await validator.users.post().validateAsync(req.body)
-            const result = await db.users.create({
+            await validator.profiles.post().validateAsync(req.body)
+            const result = await db.profiles.create({
                 select: {
-                    id: true,
-                    name: true,
-                    email: true
+                    identity_number: true,
+                    address: true
                 },
                 data: {
                     ...req.body
@@ -40,12 +38,11 @@ function main(db) {
     async function put(req, res) {
         try {
             const id = req.params.id;
-            await validator.users.put().validateAsync(req.body)
-            const result = await db.users.update({
+            await validator.profiles.put().validateAsync(req.body)
+            const result = await db.profiles.update({
                 select: {
-                    id: true,
-                    name: true,
-                    email: true
+                    identity_number: true,
+                    address: true
                 },
                 where: { id : id },
                 data: {
@@ -65,7 +62,7 @@ function main(db) {
         try {
             const id = req.params.id;
             console.log(id)
-            result = await db.users.delete({
+            result = await db.profiles.delete({
                 where: { id : id }
             });
             res.sendStatus(204);
@@ -78,11 +75,10 @@ function main(db) {
     async function getOne(req, res) {
         try {
             const id = req.params.id;
-            result = await db.users.findUnique({
+            result = await db.profiles.findUnique({
                 select: {
-                    id: true,
-                    name: true,
-                    email: true
+                    identity_number: true,
+                    address: true
                 },
                 where: { id : id }
             });
