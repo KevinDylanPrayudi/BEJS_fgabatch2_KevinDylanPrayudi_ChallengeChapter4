@@ -18,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4/issues"
   },
-  "homepage": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4#readme"
+  "homepage": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4#readme",
+  "devDependencies": {
+    "prisma": "^5.16.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.16.2"
+  }
 }
