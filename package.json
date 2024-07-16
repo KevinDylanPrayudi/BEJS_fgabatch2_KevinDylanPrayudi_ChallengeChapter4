@@ -21,9 +21,13 @@
   },
   "homepage": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4#readme",
   "devDependencies": {
+    "nodemon": "^3.1.4",
     "prisma": "^5.16.2"
   },
   "dependencies": {
-    "@prisma/client": "^5.16.2"
+    "@prisma/client": "^5.16.2",
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "joi": "^17.13.3"
   }
 }

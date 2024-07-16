@@ -19,7 +19,6 @@ function main(router, db) {
     router.post('/profiles', profiles(db).post);
     router.put('/profiles/:id', profiles(db).put);
     router.delete('/profiles/:id', profiles(db).remove);
-
   
     return router;
 }
