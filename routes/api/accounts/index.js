@@ -4,11 +4,13 @@ const validator = require('../../../validator');
 
 function main(db) {
     async function get(req, res) {
-        const result = await db.users.findMany({
+        const result = await db.accounts.findMany({
             select: {
                 id: true,
-                name: true,
-                email: true
+                bank_name: true,
+                bank_account_number: true,
+                balance: true,
+                created_at: true
             }
         });
         await db.$disconnect();
@@ -17,15 +19,22 @@ function main(db) {
     
     async function post(req, res) {
         try {
-            await validator.users.post().validateAsync(req.body)
-            const result = await db.users.create({
+            await validator.accounts.post().validateAsync(req.body)
+            let { user_id, bank_name, bank_account_number, balance } = req.body;
+            balance = Number(balance)
+            const result = await db.accounts.create({
                 select: {
                     id: true,
-                    name: true,
-                    email: true
+                    bank_name: true,
+                    bank_account_number: true,
+                    balance: true,
+                    created_at: true
                 },
                 data: {
-                    ...req.body
+                    user_id,
+                    bank_name,
+                    bank_account_number,
+                    balance
                 }
             });
             await db.$disconnect();
@@ -40,16 +49,23 @@ function main(db) {
     async function put(req, res) {
         try {
             const id = req.params.id;
-            await validator.users.put().validateAsync(req.body)
-            const result = await db.users.update({
+            await validator.accounts.put().validateAsync(req.body)
+            let { user_id, bank_name, bank_account_number, balance } = req.body;
+            balance = Number(balance)
+            const result = await db.accounts.update({
                 select: {
                     id: true,
-                    name: true,
-                    email: true
+                    bank_name: true,
+                    bank_account_number: true,
+                    balance: true,
+                    created_at: true
                 },
                 where: { id : id },
                 data: {
-                    ...req.body
+                    user_id,
+                    bank_name,
+                    bank_account_number,
+                    balance
                 }
             });
             await db.$disconnect();
@@ -65,7 +81,7 @@ function main(db) {
         try {
             const id = req.params.id;
             console.log(id)
-            result = await db.users.delete({
+            result = await db.accounts.delete({
                 where: { id : id }
             });
             await db.$disconnect();
@@ -79,11 +95,13 @@ function main(db) {
     async function getOne(req, res) {
         try {
             const id = req.params.id;
-            result = await db.users.findUnique({
+            result = await db.accounts.findUnique({
                 select: {
                     id: true,
-                    name: true,
-                    email: true
+                    bank_name: true,
+                    bank_account_number: true,
+                    balance: true,
+                    created_at: true
                 },
                 where: { id : id }
             });

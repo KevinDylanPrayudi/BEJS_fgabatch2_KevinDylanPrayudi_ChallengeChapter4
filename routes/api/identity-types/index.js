@@ -64,6 +64,7 @@ function main(db) {
             result = await db.identity_Types.delete({
                 where: { id : id }
             });
+            await db.$disconnect();
             res.sendStatus(204);
         } catch (err) {
             if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).send(err.meta.cause);
