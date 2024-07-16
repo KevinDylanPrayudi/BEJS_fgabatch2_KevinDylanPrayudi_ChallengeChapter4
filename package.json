@@ -1,0 +1,22 @@
+{
+  "name": "basic-banking-system",
+  "version": "1.0.0",
+  "description": "This project to accomplish BINAR's Challenge Chapter 4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4.git"
+  },
+  "keywords": [
+    "basic-banking-system"
+  ],
+  "author": "Kevin Dylan Prayudi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4/issues"
+  },
+  "homepage": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4#readme"
+}
