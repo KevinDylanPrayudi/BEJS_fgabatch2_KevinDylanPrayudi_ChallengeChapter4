@@ -8,7 +8,6 @@ erDiagram
         string name
         string email "UNIQUE"
         string password
-        timestamptz created_at
     }
 
     profiles {
