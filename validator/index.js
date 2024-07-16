@@ -45,13 +45,35 @@ function accounts() {
             balance: Joi.number().required()
         })
     }
-
+  
     function put() {
         return Joi.object({
             user_id: Joi.string(),
             bank_name: Joi.string(),
             bank_account_number: Joi.string(),
             balance: Joi.number()
+        })
+    }
+  
+  return { post, put };
+}
+          
+function profiles() {
+    function post() {
+        return Joi.object({
+            user_id: Joi.string().required(),
+            identity_type_id: Joi.number().required(),
+            identity_number: Joi.string().required(),
+            address: Joi.string().required()
+        })
+    }
+
+    function put() {
+        return Joi.object({
+            user_id: Joi.string(),
+            identity_type_id: Joi.number(),
+            identity_number: Joi.string(),
+            address: Joi.string()
         })
     }
 
@@ -61,5 +83,6 @@ function accounts() {
 module.exports = {
     identityTypes: identityTypes(),
     users: users(),
-    accounts: accounts()
+    accounts: accounts(),
+    profiles: profiles()
 }
