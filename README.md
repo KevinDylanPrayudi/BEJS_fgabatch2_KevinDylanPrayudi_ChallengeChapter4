@@ -32,6 +32,7 @@ erDiagram
         string bank_name
         string bank_account_number
         int balance
+        timestamptz created_at
     }
 
    transactions {
