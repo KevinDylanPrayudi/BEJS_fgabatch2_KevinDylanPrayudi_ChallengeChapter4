@@ -50,12 +50,20 @@ model Accounts {
   destination Transactions[] @relation(name: "destination")
 }
 
+model Transaction_Types {
+  id BigInt @db.BigInt @id @default(autoincrement())
+  transaction_type_name String @db.VarChar(50) @unique
+  transaction Transactions[]
+}
+
 model Transactions {
   id String @id @default(uuid())
   source_account_id String
   destination_account_id String
+  transaction_type_id BigInt @db.BigInt
   amount Int
   date DateTime? @db.Timestamptz() @default(now())
   source Accounts @relation(fields: [source_account_id], references: [id], name: "source")
   destination Accounts @relation(fields: [destination_account_id], references: [id], name: "destination")
+  transaction_type Transaction_Types @relation(fields: [transaction_type_id], references: [id])
 }
