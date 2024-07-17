@@ -3,8 +3,8 @@ const Prisma = require('@prisma/client');
 const validator = require('../../../validator');
 
 function main(db) {
-    
-    async function get(req, res) {
+
+    async function sender(req, res) {
         const result = await db.transactions.findMany({
             select: {
                 id: true,
@@ -21,22 +21,47 @@ function main(db) {
             where: {
                 source_account_id: req.params.id,
                 transaction_type: {
-                    transaction_type_name: "withdraw"
+                    transaction_type_name: "transfer"
                 }
             }
-        });
+        })
+
+        await db.$disconnect();
+        res.status(200).json(result);
+    }
+
+    async function recepient(req, res) {
+        const result = await db.transactions.findMany({
+            select: {
+                id: true,
+                amount: true,
+                date: true,
+                destination_account_id: true,
+                transaction_type: {
+                    select: {
+                        transaction_type_name: true
+                    }
+                }
+            },
+            relationLoadStrategy: 'join',
+            where: {
+                destination_account_id: req.params.id,
+                transaction_type: {
+                    transaction_type_name: "transfer"
+                }
+            }
+        })
+
         await db.$disconnect();
         res.status(200).json(result);
     }
 
     async function post(req, res) {
         try {
-            await validator.transactions.withdraw().validateAsync(req.body)
-            const { amount, source_account_id, transaction_type_id } = req.body;
-
+            await validator.transactions.transfer().validateAsync(req.body)
+            const { amount, source_account_id, destination_account_id, transaction_type_id } = req.body;
             const result = await db.$transaction(async (tx) => {
-                
-                const withdraw = await tx.accounts.update({
+                const transfer = await tx.accounts.update({
                     where: {
                         id: source_account_id
                     },
@@ -45,12 +70,11 @@ function main(db) {
                             decrement: Number(amount)
                         }
                     }
-                })
+                });
 
-                if (withdraw.balance < 0) {
+                if(transfer.balance < 0) {
                     throw new Error('Insufficient balance');
                 }
-                
                 const result = await tx.transactions.create({
                     select: {
                         id: true,
@@ -66,9 +90,22 @@ function main(db) {
                     data: {
                         amount: Number(amount),
                         source_account_id,
+                        destination_account_id,
                         transaction_type_id: Number(transaction_type_id)
                     }
-                });
+                })
+
+                await tx.accounts.update({
+                    where: {
+                        id: destination_account_id
+                    },
+                    data: {
+                        balance: {
+                            increment: Number(amount)
+                        }
+                    }
+                })
+
                 return result;
             });
 
@@ -78,12 +115,23 @@ function main(db) {
             if (err.isJoi) return res.status(400).send(err.details[0].message);
             if (err instanceof Prisma.PrismaClientKnownRequestError) {
                 if (err.code === 'P2003') {
-                    return res.status(400).json(`The ${err.meta.field_name == 'Transactions_transaction_type_id_fkey (index)' ? 'transaction_type_id' : 'source_account_id'} doesn't exists in other table.`);
+                    let name;
+                    if (err.meta.field_name == 'Transactions_transaction_type_id_fkey (index)'){
+                        name = 'transaction_type_id';
+                    } else if (err.meta.field_name == 'Transactions_destination_account_id_fkey (index)') {
+                        name = 'destination_account_id';
+                    }
+
+                    return res.status(400).json(`The ${name} doesn't exists in other table.`);
+                }
+
+                if (err.code === 'P2025') {
+                    return res.status(400).json(`The source_account_id doesn't exists in other table.`);
                 }
 
                 return res.status(400).send(err.meta.cause);
             }
-            res.status(500).json(err.message)
+            res.status(400).json(err.message);
         }
     }
 
@@ -94,25 +142,23 @@ function main(db) {
                 amount: true,
                 date: true,
                 source_account_id: true,
+                destination_account_id: true,
                 transaction_type: {
                     select: {
                         transaction_type_name: true
                     }
                 }
             },
-            relationLoadStrategy: 'join',
             where: {
-                id: req.params.id,
-                transaction_type: {
-                    transaction_type_name: "withdraw"
-                }
+                id: req.params.id
             }
-        });
+        })
+
         await db.$disconnect();
         res.status(200).json(result);
     }
 
-    return { get, post, getOne };
+    return { sender, recepient, post, getOne }
 }
 
 module.exports = main

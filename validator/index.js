@@ -97,7 +97,16 @@ function transactions() {
         })
     }
 
-    return { deposit, withdraw };
+    function transfer() {
+        return Joi.object({
+            source_account_id: Joi.string().required(),
+            destination_account_id: Joi.string().required(),
+            amount: Joi.number().greater(0).required(),
+            transaction_type_id: Joi.number().required()
+        })
+    }
+
+    return { deposit, withdraw, transfer };
 }
 
 module.exports = {
