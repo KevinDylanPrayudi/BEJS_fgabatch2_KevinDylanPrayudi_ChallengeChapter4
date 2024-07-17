@@ -4,7 +4,7 @@ const validator = require('../../../validator');
 
 function main(db) {
     async function get(req, res) {
-        const result = await db.identity_Types.findMany();
+        const result = await db.transaction_Types.findMany();
         result.forEach(element => {
             element.id = Number(element.id)
         });
@@ -14,14 +14,14 @@ function main(db) {
     
     async function post(req, res) {
         try {
-            await validator.identityTypes.post().validateAsync(req.body)
-            const { identity_type_name } = req.body;
-            const result = await db.identity_Types.create({
+            await validator.transactionTypes.post().validateAsync(req.body)
+            const { transaction_type_name } = req.body;
+            const result = await db.transaction_Types.create({
                 select: {
-                    identity_type_name: true
+                    transaction_type_name: true
                 },
                 data: {
-                    identity_type_name
+                    transaction_type_name
                 }
             });
             await db.$disconnect();
@@ -40,16 +40,16 @@ function main(db) {
     
     async function put(req, res) {
         try {
-            await validator.identityTypes.put().validateAsync(req.body)
-            const { identity_type_name } = req.body;
+            await validator.transactionTypes.put().validateAsync(req.body)
+            const { transaction_type_name } = req.body;
             const id = Number(req.params.id);
-            const result = await db.identity_Types.update({
+            const result = await db.transaction_Types.update({
                 select: {
-                    identity_type_name: true
+                    transaction_type_name: true
                 },
                 where: { id : id },
                 data: {
-                    identity_type_name
+                    transaction_type_name
                 }
             });
             await db.$disconnect();
@@ -69,7 +69,7 @@ function main(db) {
     async function remove(req, res) {
         try {
             const id = Number(req.params.id);
-            result = await db.identity_Types.delete({
+            result = await db.transaction_Types.delete({
                 where: { id : id }
             });
             await db.$disconnect();
