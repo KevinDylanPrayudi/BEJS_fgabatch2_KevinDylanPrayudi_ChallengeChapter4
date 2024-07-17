@@ -9,7 +9,7 @@ function main(db) {
             element.id = Number(element.id)
         });
         await db.$disconnect();
-        res.send(result);
+        res.status(200).json(result);
     }
     
     async function post(req, res) {
@@ -26,7 +26,7 @@ function main(db) {
             });
             await db.$disconnect();
             result.id = Number(result.id)
-            res.json(result);
+            res.status(201).json(result);
         } catch (err) {
             if(err.isJoi) return res.status(400).send(err.details[0].message);
             if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).send(err.meta.cause);
@@ -50,7 +50,7 @@ function main(db) {
             });
             await db.$disconnect();
             result.id = Number(result.id)
-            res.json(result);
+            res.status(202).json(result);
         } catch (err) {
             if(err.isJoi) return res.status(400).send(err.details[0].message);
             if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).send(err.meta.cause);

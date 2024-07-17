@@ -15,8 +15,8 @@ datasource db {
 
 model Users {
   id String @id @default(uuid())
-  name String
-  email String @unique
+  name String @db.VarChar(50)
+  email String @db.VarChar(50) @unique
   password String
   profile Profiles?
   account Accounts[]
@@ -24,7 +24,7 @@ model Users {
 
 model Identity_Types {
   id BigInt @db.BigInt @id @default(autoincrement())
-  identity_type_name String
+  identity_type_name String @db.VarChar(50) @unique
   profile Profiles[]
 }
 
@@ -32,7 +32,7 @@ model Profiles {
   id BigInt @db.BigInt @id @default(autoincrement())
   user_id String @unique
   identity_type_id BigInt @db.BigInt
-  identity_number String
+  identity_number String @db.VarChar(50)
   address String
   user Users @relation(fields: [user_id], references: [id])
   identity_type Identity_Types @relation(fields: [identity_type_id], references: [id])
@@ -42,8 +42,8 @@ model Accounts {
   id String @id @default(uuid())
   user Users @relation(fields: [user_id], references: [id])
   user_id String
-  bank_name String
-  bank_account_number String
+  bank_name String @db.VarChar(50)
+  bank_account_number String @db.VarChar(50)
   balance Int
   created_at DateTime? @db.Timestamptz() @default(now())
   source Transactions[] @relation(name: "source")

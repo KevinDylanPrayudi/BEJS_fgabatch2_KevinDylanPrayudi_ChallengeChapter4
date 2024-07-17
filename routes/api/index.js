@@ -1,9 +1,11 @@
+const router = require('express').Router();
+
 const identityTypes = require('./identity-types');
 const users = require('./users');
 const accounts = require('./accounts');
 const profiles = require('./profiles');
 
-function main(router, db) {
+function main(db) {
     router.get('/identity-types', identityTypes(db).get);
     router.post('/identity-types', identityTypes(db).post);
     router.put('/identity-types/:id', identityTypes(db).put);
@@ -23,9 +25,6 @@ function main(router, db) {
     
     router.get('/profiles', profiles(db).get);
     router.get('/profiles/:id', profiles(db).getOne);
-    router.post('/profiles', profiles(db).post);
-    router.put('/profiles/:id', profiles(db).put);
-    router.delete('/profiles/:id', profiles(db).remove);
   
     return router;
 }

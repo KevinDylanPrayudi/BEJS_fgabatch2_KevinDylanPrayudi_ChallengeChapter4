@@ -21,7 +21,10 @@ function users() {
         return Joi.object({
             name: Joi.string().required(),
             email: Joi.string().email().required(),
-            password: Joi.string().required()
+            password: Joi.string().required(),    
+            identity_type_id: Joi.number().required(),
+            identity_number: Joi.string().required(),
+            address: Joi.string().required()
         })
     }
 
@@ -29,7 +32,10 @@ function users() {
         return Joi.object({
             name: Joi.string(),
             email: Joi.string().email(),
-            password: Joi.string()
+            password: Joi.string(),
+            identity_type_id: Joi.number(),
+            identity_number: Joi.string(),
+            address: Joi.string()
         })
     }
 
@@ -57,32 +63,9 @@ function accounts() {
   
   return { post, put };
 }
-          
-function profiles() {
-    function post() {
-        return Joi.object({
-            user_id: Joi.string().required(),
-            identity_type_id: Joi.number().required(),
-            identity_number: Joi.string().required(),
-            address: Joi.string().required()
-        })
-    }
-
-    function put() {
-        return Joi.object({
-            user_id: Joi.string(),
-            identity_type_id: Joi.number(),
-            identity_number: Joi.string(),
-            address: Joi.string()
-        })
-    }
-
-    return { post, put };
-}
 
 module.exports = {
     identityTypes: identityTypes(),
     users: users(),
-    accounts: accounts(),
-    profiles: profiles()
+    accounts: accounts()
 }
