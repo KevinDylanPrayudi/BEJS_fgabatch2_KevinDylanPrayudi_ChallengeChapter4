@@ -4,6 +4,7 @@
   "description": "This project to accomplish BINAR's Challenge Chapter 4",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,5 +19,16 @@
   "bugs": {
     "url": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4/issues"
   },
-  "homepage": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4#readme"
+  "homepage": "https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "prisma": "^5.16.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.16.2",
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "joi": "^17.13.3",
+    "morgan": "^1.10.0"
+  }
 }
