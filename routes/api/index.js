@@ -32,6 +32,8 @@ function main(db) {
     router.put('/transaction-types/:id', transactionTypes(db).put);
     router.delete('/transaction-types/:id', identityTypes(db).remove);
   
+    router.use('/transactions', require('./transactions')(db));
+    
     return router;
 }
 

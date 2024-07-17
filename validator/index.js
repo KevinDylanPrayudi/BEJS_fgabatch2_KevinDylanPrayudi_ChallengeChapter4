@@ -80,9 +80,30 @@ function transactionTypes() {
     return { post, put };
 }
 
+function transactions() {
+    function deposit() {
+        return Joi.object({
+            destination_account_id: Joi.string().required(),
+            amount: Joi.number().greater(0).required(),
+            transaction_type_id: Joi.number().required()
+        })
+    }
+
+    function withdraw() {
+        return Joi.object({
+            source_account_id: Joi.string().required(),
+            amount: Joi.number().greater(0).required(),
+            transaction_type_id: Joi.number().required()
+        })
+    }
+
+    return { deposit, withdraw };
+}
+
 module.exports = {
     identityTypes: identityTypes(),
     users: users(),
     accounts: accounts(),
-    transactionTypes: transactionTypes()
+    transactionTypes: transactionTypes(),
+    transactions: transactions()
 }
