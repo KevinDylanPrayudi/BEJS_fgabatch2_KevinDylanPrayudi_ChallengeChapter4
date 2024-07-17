@@ -120,7 +120,12 @@ function main(db) {
             await db.$disconnect();
             res.sendStatus(204);
         } catch (err) {
-            if (err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).send(err.meta.cause);
+            if (err instanceof Prisma.PrismaClientKnownRequestError) {
+                if (err.code === 'P2003') {
+                    return res.status(400).json('The data is being used by another table');
+                }
+                return res.status(400).send(err.meta.cause);
+            }
             res.status(500).json(err.message)
         }
     }
