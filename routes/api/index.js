@@ -4,6 +4,7 @@ const identityTypes = require('./identity-types');
 const users = require('./users');
 const accounts = require('./accounts');
 const profiles = require('./profiles');
+const transactionTypes = require('./transaction-types');
 
 function main(db) {
     router.get('/identity-types', identityTypes(db).get);
@@ -25,6 +26,11 @@ function main(db) {
     
     router.get('/profiles', profiles(db).get);
     router.get('/profiles/:id', profiles(db).getOne);
+  
+    router.get('/transaction-types', transactionTypes(db).get);
+    router.post('/transaction-types', transactionTypes(db).post);
+    router.put('/transaction-types/:id', transactionTypes(db).put);
+    router.delete('/transaction-types/:id', identityTypes(db).remove);
   
     return router;
 }

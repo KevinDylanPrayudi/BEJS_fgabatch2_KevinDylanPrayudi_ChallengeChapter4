@@ -64,8 +64,25 @@ function accounts() {
   return { post, put };
 }
 
+function transactionTypes() {
+    function post() {
+        return Joi.object({
+            transaction_type_name: Joi.string().required()
+        })
+    }
+    
+    function put() {
+        return Joi.object({
+            transaction_type_name: Joi.string()
+        })
+    }
+
+    return { post, put };
+}
+
 module.exports = {
     identityTypes: identityTypes(),
     users: users(),
-    accounts: accounts()
+    accounts: accounts(),
+    transactionTypes: transactionTypes()
 }
