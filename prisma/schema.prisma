@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -58,12 +59,12 @@ model Transaction_Types {
 
 model Transactions {
   id String @id @default(uuid())
-  source_account_id String
+  source_account_id String?
   destination_account_id String?
   transaction_type_id BigInt @db.BigInt
   amount Int
   date DateTime? @db.Timestamptz() @default(now())
-  source Accounts @relation(fields: [source_account_id], references: [id], name: "source")
+  source Accounts? @relation(fields: [source_account_id], references: [id], name: "source")
   destination Accounts? @relation(fields: [destination_account_id], references: [id], name: "destination")
   transaction_type Transaction_Types @relation(fields: [transaction_type_id], references: [id])
 }
