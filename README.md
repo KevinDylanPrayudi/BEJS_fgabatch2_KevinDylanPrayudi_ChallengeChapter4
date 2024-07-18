@@ -61,3 +61,14 @@ Here's a description of the ERD with each entity and its attributes:
 - identity_types: Represents the different types of identities that users can have. Each identity type has an ID (int id PK) and a name (string identity_type_name).
 - accounts: Represents the bank accounts that users have. Each account has an ID (int id PK), a user ID (uuid user_id FK), a bank name (string bank_name), a bank account number (string bank_account_number), and a balance (int balance). 
 - transactions: Represents the transactions made between accounts. Each transaction has a unique ID (uuid id), the source account ID (int source_account_id "reference to account's id"), the destination account ID (int destination_account_id "reference to account's id"), an amount (int amount), and a date (timestamptz date).
+
+### To run this application follow the steps below:
+1. Clone this repo
+2. Type the syntax as shown below:
+    >npm i
+3. Add the .env file in this directory and write it as follows:
+    >DATABASE_URL="postgresql://username:password@host:port/YourDatabase?schema=public"
+4. Run this command after that:
+    >npx prisma migrate dev --name init
+5. last, run this syntax in your console:
+    >npm run dev
