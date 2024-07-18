@@ -1,30 +1,25 @@
 const { Prisma } = require('@prisma/client');
 
-const validator = require('../../../validator');
+const { validator } = require('./validator');
+const model = require('./model');
 
 function main(db) {
     async function get(req, res) {
-        const result = await db.transaction_Types.findMany();
-        result.forEach(element => {
-            element.id = Number(element.id)
-        });
-        await db.$disconnect();
+        let result = await model(db).get();
+
+        if (result === null) {
+            result = {
+                message: 'Data transaction type is empty'
+            }
+        }
         res.status(200).json(result);
     }
     
     async function post(req, res) {
         try {
-            await validator.transactionTypes.post().validateAsync(req.body)
-            const { transaction_type_name } = req.body;
-            const result = await db.transaction_Types.create({
-                select: {
-                    transaction_type_name: true
-                },
-                data: {
-                    transaction_type_name
-                }
-            });
-            await db.$disconnect();
+            await validator().post().validateAsync(req.body)
+            const result = await model(db).post(req.body);
+            
             res.status(201).json(result);
         } catch (err) {
             if(err.isJoi) return res.status(400).send(err.details[0].message);
@@ -40,19 +35,10 @@ function main(db) {
     
     async function put(req, res) {
         try {
-            await validator.transactionTypes.put().validateAsync(req.body)
-            const { transaction_type_name } = req.body;
-            const id = Number(req.params.id);
-            const result = await db.transaction_Types.update({
-                select: {
-                    transaction_type_name: true
-                },
-                where: { id : id },
-                data: {
-                    transaction_type_name
-                }
-            });
-            await db.$disconnect();
+            await validator().params().validateAsync({ id:req.params.id })
+            await validator().put().validateAsync(req.body)
+            const result = await model(db).put(req.params.id, req.body);
+            
             res.status(202).json(result);
         } catch (err) {
             if(err.isJoi) return res.status(400).send(err.details[0].message);
@@ -68,13 +54,12 @@ function main(db) {
     
     async function remove(req, res) {
         try {
-            const id = Number(req.params.id);
-            result = await db.transaction_Types.delete({
-                where: { id : id }
-            });
-            await db.$disconnect();
+            await validator().params().validateAsync({ id:req.params.id })
+            await model(db).remove(req.params.id);
+            
             res.sendStatus(204);
         } catch (err) {
+            if(err.isJoi) return res.status(400).send(err.details[0].message);
             if (err instanceof Prisma.PrismaClientKnownRequestError) {
                 if (err.code === 'P2003') {
                     return res.status(400).json('The data is being used by another table');

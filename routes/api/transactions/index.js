@@ -17,6 +17,7 @@ function main(db) {
     router.get('/transfers/recepient/:id', transfer(db).recepient);
     router.get('/transfer/:id', transfer(db).getOne);
     router.post('/transfer/', transfer(db).post);
+    
     return router;
 }
 

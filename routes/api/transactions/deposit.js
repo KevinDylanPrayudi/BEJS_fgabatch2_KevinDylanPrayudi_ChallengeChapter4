@@ -1,79 +1,23 @@
 const Prisma = require('@prisma/client');
 
-const validator = require('../../../validator');
+const { validator } = require('./validator');
+const model = require('./models/deposit');
 
 function main(db) {
     
     async function get(req, res) {
-        const result = await db.transactions.findMany({
-            select: {
-                id: true,
-                amount: true,
-                date: true,
-                destination_account_id: true,
-                transaction_type: {
-                    select: {
-                        transaction_type_name: true
-                    }
-                }
-            },
-            relationLoadStrategy: 'join',
-            where: {
-                destination_account_id: req.params.id,
-                transaction_type: {
-                    transaction_type_name: "deposit"
-                }
-            }
-        });
-        await db.$disconnect();
+        const result = await model(db).get(req.params.id);
+
         res.status(200).json(result);
     }
 
     async function post(req, res) {
         try {
-            await validator.transactions.deposit().validateAsync(req.body)
-            const { amount, destination_account_id, transaction_type_id } = req.body;
-            const result = await db.$transaction(
-                [
-                    db.transactions.create({
-                        select: {
-                            id: true,
-                            amount: true,
-                            date: true,
-                            destination_account_id: true,
-                            transaction_type: {
-                                select: {
-                                    transaction_type_name: true
-                                }
-                            }
-                        },
-                        data: {
-                            amount: Number(amount),
-                            destination_account_id,
-                            transaction_type_id: Number(transaction_type_id)
-                        }
-                    }),
-                    db.accounts.update({
-                        where: {
-                            id: destination_account_id
-                        },
-                        data: {
-                            balance: {
-                                increment: Number(amount)
-                            }
-                        }
-                    })
-                ],
-                {
-                    isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-                }
-            );
-
-            await db.$disconnect();
+            await validator().deposit().validateAsync(req.body)
+            const result = await model(db).post(req.body);
+            
             res.status(201).json(result);
         } catch (err) {
-            console.log(err)
-            if (err.isJoi) return res.status(400).send(err.details[0].message);
             if (err.isJoi) return res.status(400).send(err.details[0].message);
             if (err instanceof Prisma.PrismaClientKnownRequestError) {
                 if (err.code === 'P2003') {
@@ -88,27 +32,8 @@ function main(db) {
     }
 
     async function getOne(req, res) {
-        const result = await db.transactions.findFirst({
-            select: {
-                id: true,
-                amount: true,
-                date: true,
-                destination_account_id: true,
-                transaction_type: {
-                    select: {
-                        transaction_type_name: true
-                    }
-                }
-            },
-            relationLoadStrategy: 'join',
-            where: {
-                id: req.params.id,
-                transaction_type: {
-                    transaction_type_name: "deposit"
-                }
-            }
-        });
-        await db.$disconnect();
+        const result = await model(db).getOne(req.params.id);
+        
         res.status(200).json(result);
     }
 
