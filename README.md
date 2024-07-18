@@ -1,7 +1,7 @@
 # Basic Banking System
 ```mermaid
 erDiagram
-    users ||--o{ profiles : has
+    users ||--|| profiles : has
     users ||--o{ accounts : has
     users {
         uuid id PK
@@ -13,7 +13,7 @@ erDiagram
     profiles {
         id id PK
         uuid user_id FK
-        int identity_type_id
+        int identity_type_id FK
         string identity_number
         text address
     }
@@ -26,20 +26,28 @@ erDiagram
 
     accounts ||--o{ transactions : contains
     accounts {
-        int id PK
+        uuid id PK
         uuid user_id FK
         string bank_name
         string bank_account_number
         int balance
+        timestamptz created_at
     }
 
    transactions {
-        uuid id
-        int source_account_id "reference to account's id"
-        int destination_account_id "reference to account's id"
+        uuid id PK
+        int source_account_id FK "reference to account's id"
+        int destination_account_id FK "reference to account's id"
+        int identity_type_id FK
         int amount
         timestamptz date
-   } 
+   }
+
+   transaction_types ||--o{ transactions : has
+   transaction_types {
+        int id PK
+        string identity_type_name
+   }
 ```
 ## Brief Overview
 It shows the different entities in the system, such as users, profiles, identity types, accounts, and transactions. Each entity is represented by a box or a table in the diagram.
