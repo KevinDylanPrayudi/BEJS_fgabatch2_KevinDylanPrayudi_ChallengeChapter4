@@ -37,7 +37,6 @@ function main(db) {
 
     async function remove(id) {
         id = Number(id);
-        console.log("this is value of id = " + id);
         const result = await db.transaction_Types.delete({
             where: { id : id }
         });
