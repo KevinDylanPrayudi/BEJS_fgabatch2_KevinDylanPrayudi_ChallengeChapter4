@@ -1,23 +1,28 @@
 function main(db) {
     async function sender(id) {
-        const result = await db.transactions.findMany({
-            select: {
-                id: true,
-                amount: true,
-                date: true,
-                source_account_id: true,
-                transaction_type: {
-                    select: {
-                        transaction_type_name: true
-                    }
-                }
-            },
-            relationLoadStrategy: 'join',
+        // const result = await db.transactions.findMany({
+        //     select: {
+        //         id: true,
+        //         amount: true,
+        //         date: true,
+        //         source_account_id: true,
+        //         transaction_type: {
+        //             select: {
+        //                 transaction_type_name: true
+        //             }
+        //         }
+        //     },
+        //     relationLoadStrategy: 'join',
+        //     where: {
+        //         source_account_id: id,
+        //         transaction_type: {
+        //             transaction_type_name: "transfer"
+        //         }
+        //     }
+        // })
+        const result = await db.senders.findMany({
             where: {
-                source_account_id: id,
-                transaction_type: {
-                    transaction_type_name: "transfer"
-                }
+                source_account_id: id
             }
         })
 
@@ -26,24 +31,30 @@ function main(db) {
     }
 
     async function recepient(id) {
-        const result = await db.transactions.findMany({
-            select: {
-                id: true,
-                amount: true,
-                date: true,
-                destination_account_id: true,
-                transaction_type: {
-                    select: {
-                        transaction_type_name: true
-                    }
-                }
-            },
-            relationLoadStrategy: 'join',
+        // const result = await db.transactions.findMany({
+        //     select: {
+        //         id: true,
+        //         amount: true,
+        //         date: true,
+        //         destination_account_id: true,
+        //         transaction_type: {
+        //             select: {
+        //                 transaction_type_name: true
+        //             }
+        //         }
+        //     },
+        //     relationLoadStrategy: 'join',
+        //     where: {
+        //         destination_account_id: id,
+        //         transaction_type: {
+        //             transaction_type_name: "transfer"
+        //         }
+        //     }
+        // })
+
+        const result = await db.recepients.findMany({
             where: {
-                destination_account_id: id,
-                transaction_type: {
-                    transaction_type_name: "transfer"
-                }
+                destination_account_id: id
             }
         })
 

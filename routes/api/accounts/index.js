@@ -13,7 +13,11 @@ function main(db) {
             }
         }
         
-        res.status(200).json(result);
+        res.status(200).json({
+            status: "success",
+            message: "data accounts successfully loaded",
+            data: result
+        });
     }
     
     async function post(req, res) {
@@ -22,17 +26,29 @@ function main(db) {
 
             const result = await model(db).post(req.body);
 
-            res.status(201).json(result);
+            res.status(201).json({
+                status: "success",
+                message: "data account successfully created",
+                data: result
+            });
         } catch (err) {
             if(err.isJoi) return res.status(400).send(err.details[0].message);
             if (err instanceof Prisma.PrismaClientKnownRequestError) {
                 if (err.code === 'P2003') {
-                    return res.status(400).json(`The ${err.meta.field_name} doesn't exists in other table.`);
+                    return res.status(400).json({
+                        status: "fail",
+                        message: `The ${err.meta.field_name} doesn't exists in other table.`,
+                    });
                 }
-
-                return res.status(400).send(err.meta.cause);
+                return res.status(400).json({
+                    status: "fail",
+                    message: err.meta.cause
+                });
             }
-            res.status(500).json(err.message)
+            res.status(500).json({
+                status: "fail",
+                message: err.message
+            })
         }
     }
     
@@ -42,17 +58,33 @@ function main(db) {
 
             const result = await model(db).put(req.params.id, { ...req.body });
 
-            res.status(202).json(result);
+            res.status(202).json({
+                status: "success",
+                message: "data account successfully updated",
+                data: result
+            });
         } catch (err) {
-            if(err.isJoi) return res.status(400).send(err.details[0].message);
+            if(err.isJoi) return res.status(400).json({
+                status: "fail",
+                message: err.details[0].message
+            });
             if (err instanceof Prisma.PrismaClientKnownRequestError) {
                 if (err.code === 'P2003') {
-                    return res.status(400).json(`The ${err.meta.field_name} doesn't exists in other table.`);
+                    return res.status(400).json({
+                        status: "fail",
+                        message: `The ${err.meta.field_name} doesn't exists in other table.`,
+                    });
                 }
                 
-                return res.status(400).send(err.meta.cause);
+                return res.status(400).json({
+                    status: "fail",
+                    message: err.meta.cause
+                });
             }
-            res.status(500).json(err.message)
+            res.status(500).json({
+                status: "fail",
+                message: err.message
+            })
         }
     }
     
@@ -62,19 +94,41 @@ function main(db) {
 
             res.sendStatus(204);
         } catch (err) {
-            if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).send(err.meta.cause);
-            res.status(500).json(err.message)
+            if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).json({
+                status: "fail",
+                message: err.meta.cause
+            });
+            res.status(500).json({
+                status: "fail",
+                message: err.message
+            })
         }
     }
 
     async function getOne(req, res) {
         try {
-            const result = await model(db).getOne(req.params.id);
+            let result = await model(db).getOne(req.params.id);
 
-            res.status(200).json(result);
+            if (result === null) {
+                result = {
+                    message: 'Data account is not found'
+                }
+            }
+
+            res.status(200).json({
+                status: "success",
+                message: "data account successfully loaded",
+                data: result
+            });
         } catch (err) {
-            if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).send(err.meta.cause);
-            res.status(500).json(err.message)
+            if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).json({
+                status: "fail",
+                message: err.meta.cause
+            });
+            res.status(500).json({
+                status: "fail",
+                message: err.message
+            })
         }
     }
 

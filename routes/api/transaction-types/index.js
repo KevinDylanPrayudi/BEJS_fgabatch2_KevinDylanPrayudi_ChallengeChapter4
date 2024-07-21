@@ -12,7 +12,11 @@ function main(db) {
                 message: 'Data transaction type is empty'
             }
         }
-        res.status(200).json(result);
+        res.status(200).json({
+            status: "success",
+            message: "data transaction type successfully loaded",
+            data: result
+        });
     }
     
     async function post(req, res) {
@@ -20,16 +24,32 @@ function main(db) {
             await validator().post().validateAsync(req.body)
             const result = await model(db).post(req.body);
             
-            res.status(201).json(result);
+            res.status(201).json({
+                status: "success",
+                message: "data transaction type successfully created",
+                data: result
+            });
         } catch (err) {
-            if(err.isJoi) return res.status(400).send(err.details[0].message);
+            if(err.isJoi) return res.status(400).json({
+                status: "fail",
+                message: err.details[0].message
+            });
             if (err instanceof Prisma.PrismaClientKnownRequestError) {
                 if (err.code === 'P2002') {
-                    return res.status(400).json(`${err.meta.target[0]} already exists`);
+                    return res.status(400).json({
+                        status: "fail",
+                        message: `${err.meta.target[0]} already exists`
+                    });
                 }
-                return res.status(400).json(err.meta.cause);
+                return res.status(400).json({
+                    status: "fail",
+                    message: err.meta.cause
+                });
             }
-            res.status(500).json(err.message)
+            res.status(500).json({
+                status: "fail",
+                message: err.message
+            })
         }
     }
     
@@ -39,16 +59,32 @@ function main(db) {
             await validator().put().validateAsync(req.body)
             const result = await model(db).put(req.params.id, req.body);
             
-            res.status(202).json(result);
+            res.status(202).json({
+                status: "success",
+                message: "data transaction type successfully updated",
+                data: result
+            });
         } catch (err) {
-            if(err.isJoi) return res.status(400).send(err.details[0].message);
+            if(err.isJoi) return res.status(400).json({
+                status: "fail",
+                message: err.details[0].message
+            });
             if (err instanceof Prisma.PrismaClientKnownRequestError) {
                 if (err.code === 'P2002') {
-                    return res.status(400).json(`${err.meta.target[0]} already exists`);
+                    return res.status(400).json({
+                        status: "fail",
+                        message: `${err.meta.target[0]} already exists`
+                    });
                 }
-                return res.status(400).json(err.meta.cause);
+                return res.status(400).json({
+                    status: "fail",
+                    message: err.meta.cause
+                });
             }
-            res.status(500).json(err.message)
+            res.status(500).json({
+                status: "fail",
+                message: err.message
+            })
         }
     }
     
@@ -59,12 +95,21 @@ function main(db) {
             
             res.sendStatus(204);
         } catch (err) {
-            if(err.isJoi) return res.status(400).send(err.details[0].message);
+            if(err.isJoi) return res.status(400).json({
+                status: "fail",
+                message: err.details[0].message
+            });
             if (err instanceof Prisma.PrismaClientKnownRequestError) {
                 if (err.code === 'P2003') {
-                    return res.status(400).json('The data is being used by another table');
+                    return res.status(400).json({
+                        status: "fail",
+                        message: 'The data is being used by another table'
+                    });
                 }
-                return res.status(400).send(err.meta.cause);
+                return res.status(400).json({
+                    status: "fail",
+                    message: err.meta.cause
+                });
             }
             res.status(500).json(err.message)
         }

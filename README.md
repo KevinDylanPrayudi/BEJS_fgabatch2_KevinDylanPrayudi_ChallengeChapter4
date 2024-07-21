@@ -21,7 +21,7 @@ erDiagram
     identity_types ||--o{ profiles : has
     identity_types {
         int id PK
-        string identity_type_name
+        string identity_type_name "UNIQUE"
     }
 
     accounts ||--o{ transactions : contains
@@ -46,7 +46,7 @@ erDiagram
    transaction_types ||--o{ transactions : has
    transaction_types {
         int id PK
-        string identity_type_name
+        string identity_type_name "UNIQUE"
    }
 ```
 ## Brief Overview

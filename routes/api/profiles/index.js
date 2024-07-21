@@ -13,19 +13,42 @@ function main(db) {
             }
         }
 
-        res.status(200).json(result);
+        res.status(200).json({
+            status: 'success',
+            message: 'data profile successfully loaded',
+            data: result
+        });
     }
 
     async function getOne(req, res) {
         try {
             await validator().params().validateAsync({ id:req.params.id })
-            const result = await model(db).getOne(req.params.id);
+            let result = await model(db).getOne(req.params.id);
             
-            res.status(200).json(result);
+            if (result === null) {
+                result = {
+                    message: 'Data profile is not found'
+                }
+            }
+            
+            res.status(200).json({
+                status: 'success',
+                message: 'data profile successfully loaded',
+                data: result
+            });
         } catch (err) {
-            if(err.isJoi) return res.status(400).send(err.details[0].message);
-            if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).send(err.meta.cause);
-            res.status(500).json(err.message)
+            if(err.isJoi) return res.status(400).json({
+                status: 'fail',
+                message: err.details[0].message
+            });
+            if(err instanceof Prisma.PrismaClientKnownRequestError) return res.status(400).json({
+                status: 'fail',
+                message: err.meta.cause
+            });
+            res.status(500).json({
+                status: 'fail',
+                message: err.message
+            })
         }
     }
 

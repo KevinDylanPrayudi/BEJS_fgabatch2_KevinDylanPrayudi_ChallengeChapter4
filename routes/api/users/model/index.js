@@ -1,13 +1,15 @@
 function main(db) {
 
     async function get() {
-        const result = await db.users.findMany({
-            select: {
-                id: true,
-                name: true,
-                email: true
-            }
-        });
+        // const result = await db.users.findMany({
+        //     select: {
+        //         id: true,
+        //         name: true,
+        //         email: true
+        //     }
+        // });
+
+        const result = await db.userInfo.findMany()
         await db.$disconnect();
 
         return result;
@@ -88,14 +90,17 @@ function main(db) {
         return result;
     }
     async function getOne(id) {
-        const result = await db.users.findUnique({
-            select: {
-                id: true,
-                name: true,
-                email: true
-            },
+        // const result = await db.users.findUnique({
+        //     select: {
+        //         id: true,
+        //         name: true,
+        //         email: true
+        //     },
+        //     where: { id: id }
+        // });
+        const result = await db.userInfo.findFirst({
             where: { id: id }
-        });
+        })
 
         await db.$disconnect();
 
