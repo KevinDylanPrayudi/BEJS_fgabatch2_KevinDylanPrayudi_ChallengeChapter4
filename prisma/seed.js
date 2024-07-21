@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
+const bcrypt = require('bcrypt')
+
 async function main() {
   await prisma.$executeRaw`
     CREATE OR REPLACE VIEW "UserInfo" AS
@@ -58,8 +60,8 @@ async function main() {
 async function identityTypes() {
   return await prisma.identity_Types.createMany({
     data: [
-      { id: 1, identity_type_name: "Admin" },
-      { id: 2, identity_type_name: "User" },
+      {identity_type_name: "Admin" },
+      {identity_type_name: "User" },
     ]
   })
 }
@@ -67,9 +69,9 @@ async function identityTypes() {
 async function transactionTypes() {
   return await prisma.transaction_Types.createMany({
     data: [
-      { id: 1, transaction_type_name: "deposit" },
-      { id: 2, transaction_type_name: "withdraw" },
-      { id: 3, transaction_type_name: "transfer" },
+      {transaction_type_name: "deposit" },
+      {transaction_type_name: "withdraw" },
+      {transaction_type_name: "transfer" },
     ]
   })
 }
@@ -81,19 +83,19 @@ async function users() {
         id: "1495c7ff-3eb4-4944-86f6-124ce7d1c365",
         name: "Abigail",
         email: "abigail@gmail.com",
-        password: "abigail"
+        password: bcrypt.hashSync("abigail", 10)
       },
       {
         id: "55a42801-aa85-410a-8451-7bb57baadaaf",
         name: "John",
         email: "john@gmail.com",
-        password: "john"
+        password: bcrypt.hashSync("john", 10)
       },
       {
         id: "8f4a2ab7-381d-4455-bb94-6cbb30652286",
         name: "Jane",
         email: "jane@gmail.com",
-        password: "jane"
+        password: bcrypt.hashSync("jane", 10)
       },
     ]
   })
