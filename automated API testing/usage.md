@@ -1,4 +1,8 @@
 ## How to use Automated API Testing in POSTMAN
+** note: run this command if you want to do testing because some field and params using static value which is it will causes failed testing
+>npx prisma db seed
+
+
 1. press import button in menubar beside\
     ![alt text](./assets/pictures/import.jpg)
 2. pop up windows will appears and press files as picture marked following:\
