@@ -72,3 +72,5 @@ Here's a description of the ERD with each entity and its attributes:
     >npx prisma migrate dev --name init
 5. last, run this syntax in your console:
     >npm run dev
+
+#### [guide to testing](https://github.com/KevinDylanPrayudi/BEJS_fgabatch2_KevinDylanPrayudi_ChallengeChapter4/blob/main/automated%20API%20testing/usage.md)
