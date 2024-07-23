@@ -49,12 +49,9 @@ async function main() {
     WHERE destination_account_id IS NOT NULL AND source_account_id IS NOT NULL;
     `
 
-  await prisma.users.deleteMany();
-  await prisma.profiles.deleteMany();
-  await prisma.accounts.deleteMany();
-  await prisma.transactions.deleteMany();
-  await prisma.identity_Types.deleteMany();
-  await prisma.transaction_Types.deleteMany();
+  await prisma.$executeRaw`
+    TRUNCATE TABLE "Identity_Types", "Users", "Transaction_Types" RESTART IDENTITY CASCADE;
+  `
 }
 
 async function identityTypes() {
