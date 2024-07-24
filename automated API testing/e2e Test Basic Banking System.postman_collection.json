@@ -1689,7 +1689,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "localhost:3000/api"
+			"value": "localhost:3000/api/v1"
 		}
 	]
 }
